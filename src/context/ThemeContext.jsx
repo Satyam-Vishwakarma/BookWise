@@ -31,12 +31,21 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('bookwise-theme', theme);
   }, [theme]);
   
-  // Initialize theme from localStorage on mount
+  // Get a random theme
+  const getRandomTheme = () => {
+    const themeValues = Object.values(THEMES);
+    const randomIndex = Math.floor(Math.random() * themeValues.length);
+    return themeValues[randomIndex];
+  };
+
+  // Initialize with a random theme on mount
   useEffect(() => {
-    const savedTheme = localStorage.getItem('bookwise-theme');
-    if (savedTheme && Object.values(THEMES).includes(savedTheme)) {
-      setTheme(savedTheme);
-    }
+    // Get a random theme on each refresh/entry
+    const randomTheme = getRandomTheme();
+    setTheme(randomTheme);
+    
+    // Store in localStorage for consistency during the session
+    localStorage.setItem('bookwise-theme', randomTheme);
   }, []);
   
   // Cycle to next theme
