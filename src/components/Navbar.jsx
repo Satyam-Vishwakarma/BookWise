@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BookOpen, ChevronDown } from 'lucide-react';
+import { Menu, X, BookOpen, ChevronDown, Sun, Moon, Palette } from 'lucide-react';
+import { useTheme, THEMES } from '../context/ThemeContext';
 import PropTypes from 'prop-types';
 
 const NavLink = ({ to, children, isMobile = false }) => {
@@ -31,6 +32,21 @@ NavLink.propTypes = {
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, cycleTheme } = useTheme();
+  
+  // Get the appropriate theme icon based on current theme
+  const getThemeIcon = () => {
+    switch (theme) {
+      case THEMES.BLUE:
+        return <Palette className="h-5 w-5" />;
+      case THEMES.GREEN:
+        return <Sun className="h-5 w-5" />;
+      case THEMES.DARK:
+        return <Moon className="h-5 w-5" />;
+      default:
+        return <Palette className="h-5 w-5" />;
+    }
+  };
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -67,10 +83,29 @@ const Navbar = () => {
             </div>
             <NavLink to="/search">Browse</NavLink>
             <NavLink to="/about">About</NavLink>
+            
+            {/* Theme Switcher Button */}
+            <button
+              onClick={cycleTheme}
+              className="theme-btn p-2 rounded-full bg-gray-100 text-neutral-dark hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              aria-label="Switch theme"
+            >
+              {getThemeIcon()}
+            </button>
           </div>
           
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile menu button and theme switcher */}
+          <div className="md:hidden flex items-center space-x-2">
+            {/* Theme Switcher Button (Mobile) */}
+            <button
+              onClick={cycleTheme}
+              className="theme-btn p-2 rounded-full bg-gray-100 text-neutral-dark hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              aria-label="Switch theme"
+            >
+              {getThemeIcon()}
+            </button>
+            
+            {/* Mobile Menu Toggle */}
             <button
               type="button"
               className="text-neutral-dark hover:text-primary focus:outline-none focus:text-primary"

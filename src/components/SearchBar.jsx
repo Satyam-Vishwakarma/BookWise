@@ -80,6 +80,20 @@ const SearchBar = ({ size = 'large', placeholder = 'Search for books, authors, o
     large: 'h-14 text-lg',
   };
   
+  // Animation variants
+  const inputVariants = {
+    idle: { 
+      boxShadow: '0 0 0 0 rgba(var(--color-primary-rgb), 0)', 
+      borderColor: 'var(--color-border)',
+      transition: { duration: 0.32 }
+    },
+    focused: { 
+      boxShadow: '0 0 0 3px rgba(var(--color-primary-rgb), 0.2)', 
+      borderColor: 'var(--color-primary)',
+      transition: { duration: 0.32 }
+    }
+  };
+  
   // Suggestions animation variants
   const suggestionsVariants = {
     hidden: { 
@@ -97,9 +111,14 @@ const SearchBar = ({ size = 'large', placeholder = 'Search for books, authors, o
   return (
     <div className="relative w-full max-w-3xl mx-auto">
       {/* Search Input */}
-      <div className={`relative flex items-center ${sizeClasses[size]}`}>
+      <motion.div 
+        className={`relative flex items-center ${sizeClasses[size]}`}
+        initial="idle"
+        animate={isFocused ? "focused" : "idle"}
+        variants={inputVariants}
+      >
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-neutral-mid" />
+          <Search className={`h-5 w-5 ${isFocused ? 'text-primary' : 'text-neutral-mid'} transition-colors duration-medium`} />
         </div>
         
         <input
@@ -110,29 +129,35 @@ const SearchBar = ({ size = 'large', placeholder = 'Search for books, authors, o
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full bg-white focus:ring-2 focus:ring-primary focus:border-primary ${sizeClasses[size]}`}
+          className={`block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full bg-white focus:outline-none transition-all duration-medium ${sizeClasses[size]}`}
           aria-label="Search"
           autoComplete="off"
         />
         
         {query && (
-          <button
+          <motion.button
             type="button"
             onClick={handleClearSearch}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-mid hover:text-neutral-dark"
             aria-label="Clear search"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             <X className="h-5 w-5" />
-          </button>
+          </motion.button>
         )}
-      </div>
+      </motion.div>
       
       {/* Search Suggestions */}
       <AnimatePresence>
         {isFocused && debouncedQuery.length > 1 && (
           <motion.div
             ref={suggestionsRef}
-            className="absolute z-10 mt-2 w-full bg-white rounded-md shadow-lg border border-gray-200"
+            className="absolute z-10 mt-2 w-full bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden"
             initial="hidden"
             animate="visible"
             exit="hidden"
@@ -145,11 +170,17 @@ const SearchBar = ({ size = 'large', placeholder = 'Search for books, authors, o
             ) : suggestions?.results?.length > 0 ? (
               <ul className="py-1">
                 {suggestions.results.map((suggestion) => (
-                  <li key={suggestion.book_id}>
-                    <button
+                  <motion.li 
+                    key={suggestion.book_id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    <motion.button
                       type="button"
                       onClick={() => handleSelectSuggestion(suggestion)}
-                      className="flex items-start w-full px-4 py-2 hover:bg-gray-50 text-left"
+                      className="flex items-start w-full px-4 py-2 hover:bg-gray-50 text-left transition-colors duration-micro"
+                      whileHover={{ backgroundColor: 'rgba(var(--color-primary-rgb), 0.05)' }}
                     >
                       {suggestion.cover && (
                         <img 
@@ -166,14 +197,14 @@ const SearchBar = ({ size = 'large', placeholder = 'Search for books, authors, o
                           {formatAuthors(suggestion.authors)}
                         </p>
                       </div>
-                    </button>
-                  </li>
+                    </motion.button>
+                  </motion.li>
                 ))}
                 <li className="border-t border-gray-100">
                   <button
                     type="button"
                     onClick={() => handleSearch()}
-                    className="w-full px-4 py-2 text-sm text-primary hover:bg-gray-50 text-center font-medium"
+                    className="w-full px-4 py-3 text-sm text-primary hover:bg-primary/5 text-center font-medium transition-colors duration-micro"
                   >
                     See all results for "{debouncedQuery}"
                   </button>

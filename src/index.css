@@ -5,9 +5,60 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Default theme (Blue) */
+    --color-primary: #1E88E5;
+    --color-primary-rgb: 30, 136, 229; /* RGB values for rgba() functions */
+    --color-primary-hover: #1976D2;
+    --color-action: #43A047;
+    --color-accent: #FFD166;
+    --color-neutral-dark: #0F1724;
+    --color-neutral-mid: #6B7280;
+    --color-bg-hero: #F5FAFF;
+    --color-bg-body: #FFFFFF;
+    --color-bg-card: #FFFFFF;
+    --color-text-primary: #0F1724;
+    --color-text-secondary: #6B7280;
+    --color-border: #E5E7EB;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition-color: background-color 0.32s ease, color 0.32s ease, border-color 0.32s ease, fill 0.32s ease, stroke 0.32s ease;
+  }
+
+  /* Green Theme */
+  html.green {
+    --color-primary: #2E7D32;
+    --color-primary-rgb: 46, 125, 50;
+    --color-primary-hover: #1B5E20;
+    --color-action: #F57C00;
+    --color-accent: #FFCA28;
+    --color-bg-hero: #F1F8E9;
+  }
+
+  /* Dark Theme */
+  html.dark {
+    --color-primary: #3949AB;
+    --color-primary-rgb: 57, 73, 171;
+    --color-primary-hover: #303F9F;
+    --color-action: #00897B;
+    --color-accent: #FFC107;
+    --color-neutral-dark: #E0E0E0;
+    --color-neutral-mid: #9E9E9E;
+    --color-bg-hero: #1A202C;
+    --color-bg-body: #121212;
+    --color-bg-card: #1E1E1E;
+    --color-text-primary: #E0E0E0;
+    --color-text-secondary: #9E9E9E;
+    --color-border: #2D3748;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.18);
+  }
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
-    @apply text-neutral-dark;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-body);
+    transition: var(--transition-color);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -16,7 +67,7 @@
   }
 
   body {
-    @apply bg-white min-h-screen;
+    min-height: 100vh;
   }
 
   /* Focus styles for accessibility */
@@ -45,15 +96,15 @@
   }
 
   .btn-primary {
-    @apply btn bg-primary text-white hover:bg-primary/90 focus:ring-primary/50;
+    @apply btn bg-primary text-white hover:bg-primary-hover focus:ring-primary;
   }
 
   .btn-action {
-    @apply btn bg-action text-white hover:bg-action/90 focus:ring-action/50;
+    @apply btn bg-action text-white hover:bg-gray-100 hover:text-action focus:ring-action;
   }
 
   .btn-outline {
-    @apply btn border border-neutral-mid text-neutral-dark hover:bg-gray-50 focus:ring-primary/50;
+    @apply btn border border-neutral-mid text-neutral-dark hover:bg-gray-50 focus:ring-primary;
   }
 
   .input {
@@ -67,4 +118,101 @@
   .shimmer {
     @apply bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 bg-[length:200%_100%] animate-shimmer;
   }
+}
+
+/* Custom utility classes for theme-based styling */
+@layer utilities {
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  
+  .bg-primary-hover {
+    background-color: var(--color-primary-hover);
+  }
+  
+  .bg-action {
+    background-color: var(--color-action);
+  }
+  
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  
+  .bg-hero {
+    background-color: var(--color-bg-hero);
+  }
+  
+  .bg-card {
+    background-color: var(--color-bg-card);
+  }
+  
+  .text-primary {
+    color: var(--color-primary);
+  }
+  
+  .text-neutral-dark {
+    color: var(--color-neutral-dark);
+  }
+  
+  .text-neutral-mid {
+    color: var(--color-neutral-mid);
+  }
+  
+  .border-primary {
+    border-color: var(--color-primary);
+  }
+  
+  .border-neutral {
+    border-color: var(--color-border);
+  }
+  
+  .ring-primary {
+    --tw-ring-color: var(--color-primary);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .shadow-card-hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Scroll to search button animation */
+.scroll-btn {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.scroll-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.scroll-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Theme switcher button animation */
+.theme-btn {
+  transition: transform 0.32s ease, background-color 0.32s ease;
+}
+
+.theme-btn:hover {
+  transform: rotate(10deg);
+}
+
+.theme-btn:active {
+  transform: rotate(0) scale(0.95);
+}
+
+/* Enhanced search bar styling */
+.search-bar-focus {
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.2);
+  border-color: var(--color-primary);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }

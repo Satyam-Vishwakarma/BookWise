@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Search, TrendingUp, Bell, Zap, ShieldCheck, BarChart3 } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 const features = [
   {
@@ -34,7 +35,7 @@ const features = [
   },
 ];
 
-const Features = () => {
+const Features = ({ scrollToSearch }) => {
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -92,20 +93,26 @@ const Features = () => {
         </motion.div>
 
         <div className="mt-16 text-center">
-          <motion.div
+          <motion.button
+            onClick={scrollToSearch}
+            className="scroll-btn bg-primary text-white font-medium px-8 py-3 rounded-full shadow-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.32 }} // medium duration
+            transition={{ duration: 0.32 }}
             viewport={{ once: true }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <a href="#search" className="btn-primary px-8 py-3">
-              Start Comparing Prices
-            </a>
-          </motion.div>
+            Start Comparing Prices
+          </motion.button>
         </div>
       </div>
     </section>
   );
+};
+
+Features.propTypes = {
+  scrollToSearch: PropTypes.func.isRequired,
 };
 
 export default Features;

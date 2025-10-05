@@ -1,9 +1,32 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Search, TrendingUp, Bell } from 'lucide-react';
+import { BookOpen, Search, TrendingUp, Bell, ChevronDown } from 'lucide-react';
+import { useRef, useEffect } from 'react';
 import SearchBar from '../components/SearchBar';
 import Features from '../components/Features';
 
 const Home = () => {
+  // Refs for scroll functionality
+  const searchBarRef = useRef(null);
+  const searchInputRef = useRef(null);
+  
+  // Function to scroll to search bar
+  const scrollToSearch = () => {
+    searchBarRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'center'
+    });
+    
+    // Focus the search input after scrolling
+    setTimeout(() => {
+      if (searchInputRef.current) {
+        const inputElement = searchInputRef.current.querySelector('input');
+        if (inputElement) {
+          inputElement.focus();
+        }
+      }
+    }, 800); // Delay to allow smooth scroll to complete
+  };
+  
   // Animation variants
   const heroVariants = {
     hidden: { opacity: 0 },
@@ -52,14 +75,29 @@ const Home = () => {
               Compare prices from multiple online bookstores, track price history,
               and get alerts when prices drop.
             </p>
+            
+            {/* Scroll to Search Button */}
+            <motion.button
+              onClick={scrollToSearch}
+              className="scroll-btn mt-8 flex items-center mx-auto bg-primary text-white px-6 py-3 rounded-full shadow-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="mr-2 font-medium">Scroll to Search</span>
+              <ChevronDown className="h-5 w-5 animate-bounce" />
+            </motion.button>
           </motion.div>
 
           {/* Search Bar */}
           <motion.div
-            className="max-w-3xl mx-auto"
+            ref={searchBarRef}
+            className="max-w-3xl mx-auto mt-16 pt-8"
             variants={itemVariants}
           >
-            <SearchBar size="large" placeholder="Search for books, authors, or ISBN..." />
+            <div ref={searchInputRef}>
+              <SearchBar size="large" placeholder="Search for books, authors, or ISBN..." />
+            </div>
           </motion.div>
 
           {/* Quick Stats */}
@@ -93,7 +131,7 @@ const Home = () => {
       </motion.section>
 
       {/* Features Section */}
-      <Features />
+      <Features scrollToSearch={scrollToSearch} />
 
       {/* Popular Categories */}
       <section className="py-16 bg-white">
@@ -202,12 +240,14 @@ const Home = () => {
           <p className="max-w-2xl mx-auto mb-8">
             Join thousands of readers who use BookWise to find the best deals on their favorite books.
           </p>
-          <a
-            href="#search"
-            className="inline-block bg-white text-primary font-medium px-8 py-3 rounded-md hover:bg-gray-100 transition-colors duration-micro"
+          <motion.button
+            onClick={scrollToSearch}
+            className="scroll-btn bg-white text-primary font-medium px-8 py-3 rounded-full shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Start Comparing Now
-          </a>
+          </motion.button>
         </div>
       </section>
     </div>
